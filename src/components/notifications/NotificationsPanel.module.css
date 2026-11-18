@@ -1,0 +1,98 @@
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 20px 48px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.markAll {
+  border: none;
+  background: #3b82f6;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.muted {
+  color: var(--softTextColor, #64748b);
+  font-size: 15px;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--borderColor, rgba(15, 23, 42, 0.1));
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.row {
+  border-bottom: 1px solid var(--borderColor, rgba(15, 23, 42, 0.08));
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.unread {
+  background: rgba(59, 130, 246, 0.06);
+}
+
+.link {
+  display: block;
+  padding: 16px 18px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.link:hover {
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.rowTitle {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.rowMsg {
+  display: block;
+  font-size: 14px;
+  color: var(--softTextColor, #64748b);
+  line-height: 1.45;
+  margin-bottom: 6px;
+}
+
+.rowTime {
+  font-size: 12px;
+  color: var(--softTextColor, #94a3b8);
+}
+
+.hint {
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--softTextColor, #64748b);
+}
+
+.hint a {
+  color: #3b82f6;
+  font-weight: 600;
+}

@@ -1,0 +1,674 @@
+/* ======================
+   MAIN CONTAINER + TOKENS
+   ====================== */
+.container {
+  /* 4px spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  /* softer hairline derived from your theme border colour */
+  --line: color-mix(in srgb, var(--borderColor) 75%, transparent);
+  --ring: rgba(15, 23, 42, 0.08);
+
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.15fr)
+    minmax(0, 0.95fr)
+    minmax(0, 0.85fr);
+  gap: 0; /* column padding + dividers provide the rhythm */
+  margin-block-start: var(--space-8);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--cardBg), #d97706 3%);
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.05),
+    0 12px 32px rgba(15, 23, 42, 0.07);
+}
+
+/* ======================
+   COLUMNS
+   Base = NO inner scrolling, so the page scrolls normally on
+   phones, tablets and touch screens (no scroll traps).
+   ====================== */
+.column {
+  container-type: inline-size;
+  min-width: 0;
+  padding: clamp(16px, 2vw, 24px);
+  border-inline-end: 1px solid var(--line);
+}
+
+.column:last-child {
+  border-inline-end: none;
+}
+
+/* Desktop with a mouse: independent column scrolling, scrollbars hidden.
+   Still scrollable with wheel / trackpad / keyboard. A soft fade at the
+   bottom edge hints that there is more. Scroll chains to the page at the
+   ends (overscroll-behavior: auto) so it never traps the cursor. */
+@media (min-width: 1200px) and (hover: hover) and (pointer: fine) {
+  .column {
+    max-height: clamp(600px, 85vh, 900px);
+    overflow-y: auto;
+    overscroll-behavior: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-block-end: 48px;
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 36px), transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 36px), transparent 100%);
+  }
+
+  .column::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ======================
+   SHARED: one link per article (stretched), focus, hover
+   ====================== */
+.cardLink {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* makes the whole card clickable via its single heading link */
+.cardLink::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.container a:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* heading is visually hidden, so ring the whole card instead */
+.analysisCard .cardLink:focus-visible {
+  outline: none;
+}
+
+.analysisCard .cardLink:focus-visible::after {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+  border-radius: 12px;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Cards: positioning context + lift transition (transform only, never layout) */
+.hero,
+.smallPost,
+.middleCard,
+.textOnly,
+.analysisCard,
+.latestItem {
+  position: relative;
+  transform: translateY(var(--card-lift, 0px));
+  transition: transform 0.2s ease;
+}
+
+/* Unified hover / keyboard-focus state, driven by custom properties */
+.hero:hover,
+.hero:focus-within,
+.smallPost:hover,
+.smallPost:focus-within,
+.middleCard:hover,
+.middleCard:focus-within,
+.textOnly:hover,
+.textOnly:focus-within,
+.analysisCard:hover,
+.analysisCard:focus-within,
+.latestItem:hover,
+.latestItem:focus-within {
+  --title-color: var(--primary);
+  --deco: color-mix(in srgb, var(--primary) 55%, transparent);
+  --img-scale: 1.03;
+  --card-lift: -1px;
+}
+
+/* Headings: balanced wrapping + animated-in underline on hover */
+.heroTitle,
+.smallPostTitle,
+.middleTitle,
+.textOnlyTitle,
+.latestTitle {
+  text-wrap: balance;
+  text-decoration-line: underline;
+  text-decoration-thickness: 2px;
+  text-decoration-color: var(--deco, transparent);
+  text-underline-offset: 4px;
+  transition:
+    color 0.2s ease,
+    text-decoration-color 0.2s ease;
+}
+
+/* Images scale inside their overflow:hidden wrappers */
+.heroImg,
+.middleImg,
+.thumbImg,
+.analysisImg {
+  object-fit: cover;
+  transform: scale(var(--img-scale, 1));
+  transition: transform 0.35s ease;
+}
+
+/* Hairline ring around every image so light photos don't bleed into the card */
+.heroImgWrapper::after,
+.middleImgWrapper::after,
+.analysisImgWrapper::after,
+.smallPostImg::after,
+.latestImg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px var(--ring);
+  pointer-events: none;
+}
+
+/* ======================
+   LEFT COLUMN - HERO
+   ====================== */
+.hero {
+  margin-block-end: var(--space-2);
+}
+
+.heroImgWrapper {
+  display: block;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-block-end: var(--space-4);
+}
+
+.heroTitle {
+  font-size: clamp(1.3rem, 2.3vw, 1.75rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  margin-block: 0 var(--space-3);
+  color: var(--title-color, var(--textColor));
+}
+
+.heroDesc {
+  max-width: 60ch;
+  font-size: clamp(0.875rem, 1.2vw, 0.96875rem);
+  line-height: 1.65;
+  color: var(--softTextColor);
+  margin-block: 0 var(--space-4);
+}
+
+.readMore {
+  display: inline-block;
+  padding-block-end: 3px;
+  border-bottom: 2px solid currentColor;
+  font-size: clamp(0.7rem, 1vw, 0.75rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--title-color, var(--textColor));
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+}
+
+/* Left bottom posts */
+.leftBottom {
+  display: flex;
+  flex-direction: column;
+}
+
+.smallPost {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+  padding-block: var(--space-5);
+  border-bottom: 1px solid var(--line);
+}
+
+.smallPost:last-child {
+  border-bottom: none;
+  padding-block-end: 0;
+}
+
+.smallPostText {
+  flex: 1;
+  min-width: 0;
+}
+
+.smallPostTitle {
+  font-size: clamp(0.975rem, 1.4vw, 1.0625rem);
+  font-weight: 700;
+  line-height: 1.32;
+  letter-spacing: -0.005em;
+  margin-block: 0 var(--space-2);
+  color: var(--title-color, var(--textColor));
+}
+
+.smallPostDesc {
+  max-width: 60ch;
+  font-size: clamp(0.8125rem, 1.1vw, 0.875rem);
+  line-height: 1.6;
+  margin-block: 0;
+  color: var(--softTextColor);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.smallPostImg {
+  position: relative;
+  width: 112px;
+  height: 80px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* ======================
+   MIDDLE COLUMN
+   ====================== */
+.middleCard {
+  padding-block: var(--space-5);
+  border-bottom: 1px solid var(--line);
+}
+
+.middleCard:first-child {
+  padding-block-start: 0;
+}
+
+.middleImgWrapper {
+  display: block;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-block-end: var(--space-3);
+}
+
+.middleTitle {
+  font-size: clamp(1.075rem, 1.6vw, 1.2rem);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin-block: 0 var(--space-2);
+  color: var(--title-color, var(--textColor));
+}
+
+.middleDesc {
+  max-width: 60ch;
+  font-size: clamp(0.8125rem, 1.1vw, 0.875rem);
+  line-height: 1.6;
+  margin-block: 0;
+  color: var(--softTextColor);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.textOnly {
+  padding-block: var(--space-5);
+  border-bottom: 1px solid var(--line);
+}
+
+.textOnlyTitle {
+  font-size: clamp(0.975rem, 1.4vw, 1.0625rem);
+  font-weight: 700;
+  line-height: 1.32;
+  margin-block: 0;
+  color: var(--title-color, var(--textColor));
+}
+
+/* Section header */
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-block: var(--space-6) var(--space-4);
+}
+
+.column > .sectionHeader:first-child {
+  margin-block-start: 0;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  background: #e11d48;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow:
+    0 0 0 3px rgba(225, 29, 72, 0.16),
+    0 0 10px 2px rgba(225, 29, 72, 0.4);
+}
+
+.sectionLabel {
+  font-size: clamp(0.7rem, 1vw, 0.75rem);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--textColor);
+  text-transform: uppercase;
+}
+
+.sectionLine {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.analysisImgWrapper {
+  display: block;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* ======================
+   RIGHT COLUMN - LATEST
+   ====================== */
+.latestList {
+  display: flex;
+  flex-direction: column;
+}
+
+.latestItem {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  padding-block: var(--space-5);
+  border-bottom: 1px solid var(--line);
+}
+
+.latestItem:first-child {
+  padding-block-start: 0;
+}
+
+.latestItem:last-child {
+  border-bottom: none;
+  padding-block-end: 0;
+}
+
+.latestText {
+  flex: 1;
+  min-width: 0;
+}
+
+.latestTitle {
+  font-size: clamp(0.9rem, 1.2vw, 0.975rem);
+  font-weight: 600;
+  line-height: 1.4;
+  margin-block: 0;
+  color: var(--title-color, var(--textColor));
+}
+
+.redTitle {
+  color: #e11d48 !important;
+}
+
+.redTitle:hover {
+  color: #be123c !important;
+}
+
+.latestImg {
+  position: relative;
+  width: 88px;
+  height: 66px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* ======================
+   AD SLOTS (reserved heights => zero CLS)
+   ====================== */
+.adSlot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  box-sizing: border-box;
+  margin-block: var(--space-4);
+  padding: var(--space-4);
+  border: 1px dashed var(--borderColor);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--cardBg), var(--textColor) 3%);
+  contain: layout;
+}
+
+.adInline,
+.adNative {
+  min-height: 90px;
+}
+
+.adSidebar {
+  min-height: 250px;
+}
+
+.adLabel {
+  font-size: 0.625rem; /* 10px */
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--softTextColor);
+}
+
+.adBody {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  font-size: clamp(0.75rem, 1vw, 0.8125rem);
+  color: var(--softTextColor);
+}
+
+/* Device visibility pair (more specific than .adSlot's display) */
+.adSlot.mobileOnly {
+  display: none;
+}
+
+/* ======================
+   CONTAINER QUERIES (per column, independent of viewport)
+   ====================== */
+@container (max-width: 300px) {
+  .smallPost,
+  .latestItem {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .smallPostImg,
+  .latestImg {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+  }
+}
+
+@container (min-width: 301px) {
+  .smallPost,
+  .latestItem {
+    flex-direction: row;
+  }
+}
+
+/* ======================
+   RESPONSIVE LAYOUT
+   ====================== */
+
+/* Sidebar ad only from 1100px up */
+@media (max-width: 1099px) {
+  .adSlot.adSidebar {
+    display: none;
+  }
+}
+
+/* 901-1199px: two columns, left spans two rows, LATEST full width below */
+@media (max-width: 1199px) {
+  .container {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .column:first-child {
+    grid-row: span 2;
+  }
+
+  .column:nth-child(2) {
+    border-inline-end: none;
+  }
+
+  .column:last-child {
+    grid-column: 1 / -1;
+    border-inline-end: none;
+    border-block-start: 1px solid var(--line);
+  }
+
+  /* LATEST has room here: lay items out as a responsive grid */
+  .latestList {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-6);
+  }
+
+  .latestItem:nth-last-child(-n + 2) {
+    border-bottom: none;
+  }
+
+  .latestItem:first-child,
+  .latestItem:nth-child(2) {
+    padding-block-start: 0;
+  }
+
+  .latestItem:last-child {
+    padding-block-end: var(--space-5);
+  }
+}
+
+/* <=900px: single column */
+@media (max-width: 900px) {
+  .container {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .column,
+  .column:last-child {
+    grid-column: auto;
+    border-inline-end: none;
+    border-block-start: none;
+    border-block-end: 1px solid var(--line);
+  }
+
+  .column:first-child {
+    grid-row: auto;
+  }
+
+  .column:last-child {
+    border-block-end: none;
+  }
+
+  .heroImgWrapper {
+    aspect-ratio: 16 / 9;
+  }
+
+  .heroTitle {
+    font-size: clamp(1.2rem, 4.4vw, 1.5rem);
+  }
+
+  .latestList {
+    display: flex;
+  }
+
+  .latestItem:nth-last-child(-n + 2) {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .latestItem:nth-child(2) {
+    padding-block-start: var(--space-5);
+  }
+
+  .latestItem:last-child {
+    border-bottom: none;
+    padding-block-end: 0;
+  }
+
+  .adSlot.desktopOnly {
+    display: none;
+  }
+
+  .adSlot.mobileOnly {
+    display: flex;
+  }
+}
+
+/* Phones */
+@media (max-width: 600px) {
+  .container {
+    margin-block-start: var(--space-6);
+    border-radius: 14px;
+  }
+
+  .column {
+    padding: var(--space-4);
+  }
+
+  .smallPost,
+  .latestItem {
+    padding-block: var(--space-4);
+  }
+
+  .smallPostImg {
+    width: 96px;
+    height: 72px;
+  }
+
+  .latestImg {
+    width: 80px;
+    height: 60px;
+  }
+}
+
+@media (max-width: 380px) {
+  .smallPostImg {
+    width: 84px;
+    height: 64px;
+  }
+
+  .latestImg {
+    width: 72px;
+    height: 54px;
+  }
+}
+
+/* ======================
+   REDUCED MOTION
+   ====================== */
+@media (prefers-reduced-motion: reduce) {
+  .container,
+  .container * {
+    transition: none !important;
+    transform: none !important;
+  }
+}

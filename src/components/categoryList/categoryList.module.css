@@ -1,0 +1,224 @@
+/* ======================
+   CONTAINER + TOKENS
+   ====================== */
+.container {
+  /* 4px spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  /* 4 editorial columns + 1 ad rail (between columns 2 and 3) */
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(var(--space-6), 2vw, var(--space-8));
+  margin-block-start: calc(var(--space-8) * 1.5); /* 48px */
+  padding-block-start: var(--space-3);
+}
+
+/* ======================
+   COLUMN
+   ====================== */
+.column {
+  min-width: 0;
+}
+
+/* Category header (header -> 16px -> main story) */
+.categoryHeader {
+  margin-block-end: var(--space-4);
+}
+
+.categoryTitle {
+  font-size: clamp(0.75rem, 1vw, 0.8125rem);
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--textColor);
+  margin-block: 0 var(--space-2);
+}
+
+.categoryLine {
+  height: 1px;
+  background: var(--borderColor);
+}
+
+/* Focus ring for every link in a column */
+.column a:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+/* Main story (main story -> 20px -> list) */
+.mainStory {
+  margin-block-end: var(--space-5);
+}
+
+.mainImgWrapper {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-block-end: var(--space-3);
+}
+
+.mainImg {
+  object-fit: cover;
+}
+
+.mainTitle {
+  font-size: clamp(1rem, 1.4vw, 1.0625rem);
+  font-weight: 700;
+  line-height: 1.35;
+  margin-block: 0;
+  color: var(--textColor);
+  transition: color 0.2s ease;
+}
+
+.mainStory:hover .mainTitle,
+.mainTitle:hover {
+  color: var(--primary);
+}
+
+/* List */
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.listItem {
+  padding-block: var(--space-3);
+  padding-inline: 0;
+  border-top: 1px solid var(--borderColor);
+}
+
+.listTitle {
+  font-size: clamp(0.875rem, 1.2vw, 0.9375rem);
+  font-weight: 600;
+  line-height: 1.4;
+  margin-block: 0;
+  color: var(--textColor);
+  transition: color 0.2s ease;
+}
+
+.listTitle:hover {
+  color: var(--primary);
+}
+
+/* Red highlight: reserved for editorial emphasis, never used by ads */
+.highlight {
+  color: #e11d48;
+}
+
+.highlight:hover {
+  color: #be123c;
+}
+
+/* ======================
+   AD SLOTS (calm, static, reserved heights => zero CLS)
+   No animation, no --primary, no highlight red.
+   ====================== */
+.adRail {
+  min-width: 0;
+}
+
+.adSlot {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: var(--space-4);
+  border: 1px dashed var(--borderColor);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--cardBg, #fff), var(--textColor) 3%);
+  contain: layout;
+}
+
+.sidebar {
+  min-height: 480px; /* ~ editorial column height */
+}
+
+.inline {
+  min-height: 120px; /* tablet full-width row */
+}
+
+.adLabel {
+  display: block;
+  margin-block-end: var(--space-2);
+  font-size: 0.625rem; /* 10px */
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--softTextColor);
+}
+
+.adBody {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem; /* 12px */
+  text-align: center;
+  color: var(--softTextColor);
+}
+
+/* Visibility pairs: only one ad variant is ever displayed per breakpoint */
+.adSlot.tabletOnly,
+.adSlot.mobileOnly {
+  display: none;
+}
+
+/* ======================
+   RESPONSIVE
+   ====================== */
+
+/* Tablet + mobile: rail hidden, grid collapses */
+@media (max-width: 1100px) {
+  .container {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-8) clamp(var(--space-6), 2vw, var(--space-8));
+  }
+
+  .desktopOnly {
+    display: none;
+  }
+}
+
+/* Tablet (641-1100px): one inline ad as a full-width row after TECHNOLOGY */
+@media (min-width: 641px) and (max-width: 1100px) {
+  .adSlot.tabletOnly {
+    display: flex;
+    grid-column: 1 / -1;
+  }
+}
+
+/* Mobile (<=640px): single column, one inline ad after TECHNOLOGY */
+@media (max-width: 640px) {
+  .container {
+    grid-template-columns: minmax(0, 1fr);
+    gap: calc(var(--space-8) + var(--space-1)); /* 36px */
+  }
+
+  .adSlot.mobileOnly {
+    display: flex;
+    min-height: 100px;
+  }
+
+  .mainTitle {
+    font-size: clamp(1.0625rem, 4vw, 1.125rem);
+  }
+}
+
+/* ======================
+   REDUCED MOTION
+   (ads have no transitions or transforms; this covers editorial hover only)
+   ====================== */
+@media (prefers-reduced-motion: reduce) {
+  .container * {
+    transition: none !important;
+    transform: none !important;
+  }
+}

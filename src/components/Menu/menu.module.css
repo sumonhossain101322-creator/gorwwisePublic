@@ -1,0 +1,19 @@
+.container {
+  flex: 2;
+  min-width: 0;
+  margin-top: 28px;
+}
+
+.subtitle {
+  color: gray;
+  font-size: clamp(14px, 1.2vw, 16px);
+  font-weight: 400;
+}
+.title {
+  font-size: clamp(22px, 2.2vw, 28px);
+}
+
+
+@media (max-width: 960px) {
+  .container { margin-top: 16px; }
+}

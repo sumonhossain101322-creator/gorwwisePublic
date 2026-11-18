@@ -1,0 +1,68 @@
+.bone {
+  display: block;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--textColor, #111) 9%, transparent),
+    color-mix(in srgb, var(--textColor, #111) 18%, transparent),
+    color-mix(in srgb, var(--textColor, #111) 9%, transparent)
+  );
+  background-size: 220% 100%;
+  animation: homeShimmer 1.3s ease-in-out infinite;
+}
+
+.fill {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  height: auto;
+  border-radius: inherit;
+}
+
+.stack {
+  display: block;
+}
+
+.line,
+.short,
+.title,
+.header {
+  height: 14px;
+  margin: 0 0 10px;
+}
+
+.line {
+  width: 100%;
+}
+
+.short {
+  width: 68%;
+  margin-bottom: 0;
+}
+
+.title {
+  height: 22px;
+  width: 90%;
+  margin-bottom: 12px;
+}
+
+.header {
+  height: 18px;
+  width: 46%;
+  margin-bottom: 0;
+}
+
+@keyframes homeShimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bone {
+    animation: none;
+  }
+}

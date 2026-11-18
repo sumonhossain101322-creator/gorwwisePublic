@@ -1,0 +1,42 @@
+.page {
+  background: var(--softBg);
+  color: var(--textColor);
+  flex: 1 0 auto;
+  margin-top: 28px;
+  padding: 0 24px 24px;
+  font-family: var(--font-sans);
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.mainGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+}
+
+.postsWithAd {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 16px;
+  align-items: start;
+}
+
+.profileRail {
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .postsWithAd {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .mainGrid {
+    grid-template-columns: 1fr;
+  }
+  .page {
+    padding: 16px;
+  }
+}

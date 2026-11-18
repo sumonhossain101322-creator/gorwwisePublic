@@ -1,0 +1,13 @@
+﻿.categoryList { margin-top: 35px; margin-bottom: 60px; display: flex; flex-wrap: wrap; gap: 10px; }
+.categoryItem { padding: 9px clamp(12px, 2vw, 20px); border-radius: 10px; font-size: 14px; white-space: nowrap; color: white; font-weight: 600; }
+.blue { background-color: #2563eb; }
+.emerald { background-color: #059669; }
+.navy { background-color: #0f172a; }
+.gold { background-color: #d4a017; color: #111827; }
+.teal { background-color: #0f766e; }
+.slate { background-color: #64748b; }
+
+.active {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.85), 0 0 0 5px #111;
+  transform: translateY(-1px);
+}

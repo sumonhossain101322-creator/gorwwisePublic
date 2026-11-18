@@ -1,0 +1,231 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  WRITER
+  USER
+}
+
+enum PostStatus {
+  DRAFT
+  PENDING_APPROVAL
+  PUBLISHED
+  PENDING_DELETE
+}
+
+enum ApprovalType {
+  POST_CREATE
+  POST_UPDATE
+  POST_DELETE
+  ROLE_UPGRADE
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum NotificationType {
+  COMMENT
+  LIKE
+  FOLLOW
+  POST_APPROVED
+  POST_REJECTED
+  POST_REVIEW_REQUEST
+  ROLE_UPGRADE_REQUEST
+  ROLE_UPGRADE_APPROVED
+  ROLE_UPGRADE_REJECTED
+}
+
+model Account {
+  id                String  @id @default(cuid()) @map("_id")
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid()) @map("_id")
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid()) @map("_id")
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  // Null for Google/GitHub accounts, which never have a local password.
+  password      String?
+  username      String?
+  // Public job title shown on the profile. Access control lives on `role`.
+  jobTitle      String?
+  role          Role      @default(USER)
+  location      String?
+  bio           String?
+  coverImage    String?
+  settings      Json?
+  createdAt     DateTime? @default(now())
+  accounts      Account[]
+  sessions      Session[]
+  posts         Post[]
+  comments               Comment[]
+  notificationsReceived  Notification[] @relation("ReceivedNotifications")
+  notificationsSent      Notification[] @relation("SentNotifications")
+  approvalRequests       ApprovalRequest[]
+}
+
+// Holds a pending signup until the email code is verified.
+// `otp` is an HMAC, never the raw 6-digit code.
+// `passwordHash` is kept here so the User row is created only after verification.
+model Otp {
+  id           String   @id @default(cuid()) @map("_id")
+  email        String   @unique
+  otp          String
+  passwordHash String
+  expiresAt    DateTime
+  attempts     Int      @default(0)
+  createdAt    DateTime @default(now())
+}
+
+model VerificationToken {
+  identifier String   @id @map("_id")
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Category {
+  id    String  @id @default(cuid()) @map("_id")
+  slug  String  @unique
+  title String
+  img   String?
+  posts Post[]
+}
+
+model Post {
+  id          String    @id @default(cuid()) @map("_id")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+  publishedAt DateTime?
+  slug        String    @unique
+  title       String
+  excerpt     String?
+  desc        String
+  img         String?
+  gallery     String[]  @default([])
+  readTime    Int       @default(5)
+  views       Int       @default(0)
+  published   Boolean    @default(true)
+  status      PostStatus @default(DRAFT)
+  editorPick  Boolean    @default(false)
+
+  catSlug     String
+  cat         Category  @relation(fields: [catSlug], references: [slug])
+
+  userEmail   String
+  user        User      @relation(fields: [userEmail], references: [email])
+
+  comments         Comment[]
+  approvalRequests ApprovalRequest[]
+
+  @@index([catSlug, publishedAt])
+  @@index([userEmail, createdAt])
+  @@index([published, createdAt])
+}
+
+
+model Comment {
+  id        String   @id @default(cuid()) @map("_id")
+  createdAt DateTime @default(now())
+  desc      String
+  userEmail String
+  user      User     @relation(fields: [userEmail], references: [email])
+  postSlug  String
+  post      Post     @relation(fields: [postSlug], references: [slug])
+  parentId  String?
+  parent    Comment? @relation("CommentReplies", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  replies   Comment[] @relation("CommentReplies")
+
+  @@index([postSlug, createdAt])
+  @@index([parentId])
+}
+
+model Notification {
+  id          String           @id @default(cuid()) @map("_id")
+  recipientId String
+  recipient   User             @relation("ReceivedNotifications", fields: [recipientId], references: [id], onDelete: Cascade)
+  senderId    String?
+  sender      User?            @relation("SentNotifications", fields: [senderId], references: [id], onDelete: SetNull)
+  type        NotificationType
+  message     String
+  link        String           @default("/")
+  isRead      Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+
+  @@index([recipientId, createdAt])
+  @@index([recipientId, isRead])
+}
+
+model TrafficStat {
+  id        String   @id @default(cuid()) @map("_id")
+  month     String
+  views     Int      @default(0)
+  sortOrder Int      @default(0)
+  userEmail String
+
+  @@index([userEmail, sortOrder])
+}
+
+// requesterId and targetPostId use the same string ids as User and Post.
+model ApprovalRequest {
+  id           String         @id @default(cuid()) @map("_id")
+  type         ApprovalType
+  requesterId  String
+  requester    User           @relation(fields: [requesterId], references: [id], onDelete: Cascade)
+  targetPostId String?
+  targetPost   Post?          @relation(fields: [targetPostId], references: [id])
+  payload      Json?
+  status       ApprovalStatus @default(PENDING)
+  createdAt    DateTime       @default(now())
+
+  @@index([requesterId, createdAt])
+  @@index([status, createdAt])
+  @@index([targetPostId])
+}
+
+model TrafficSource {
+  id         String @id @default(cuid()) @map("_id")
+  sourceName String
+  value      Int    @default(0)
+  userEmail  String
+
+  @@index([userEmail])
+}

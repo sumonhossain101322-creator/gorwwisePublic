@@ -1,0 +1,9 @@
+.container{
+  width: 100%;
+  min-width: 0;
+}
+
+.title{
+  margin: 28px 0;
+  font-size: clamp(24px, 3vw, 34px);
+}

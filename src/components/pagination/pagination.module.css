@@ -1,0 +1,24 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-block: 28px;
+}
+
+.button {
+  min-width: 100px;
+  border: none;
+  padding: 16px;
+  background-color: crimson;
+  color: white;
+  cursor: pointer;
+}
+
+.button:disabled{
+  background-color: rgba(220, 20, 60, 0.473);
+  cursor: not-allowed;
+}
+
+@media (max-width: 420px) {
+  .button { width: 50%; min-width: 0; padding: 12px 8px; }
+}

@@ -1,0 +1,615 @@
+﻿
+/* =========================================
+   1. ROOT VARIABLES / DESIGN SYSTEM
+========================================= */
+
+:root {
+  color-scheme: light;
+
+  --bg: #ffffff;
+  --textColor: #0f172a;
+  --softBg: #f5f6f8;
+  --softTextColor: #626262;
+
+  --cardBg: #ffffff;
+  --borderColor: #e5e7eb;
+  --primary: #0f172a;
+  --primaryHover: #10b981;
+
+  --success: #10b981;
+  --danger: #dc2626;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  --font-sans: Arial, Tahoma, sans-serif;
+
+  --content-width: 1440px;
+  --reading-width: 760px;
+
+  /* Smooth theme transition */
+  --transition: 450ms;
+  --theme-easing: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+/* =========================================
+   2. DARK THEME
+========================================= */
+
+.dark {
+  color-scheme: dark;
+
+  --bg: #0f172a;
+  --textColor: #e5e7eb;
+  --softBg: #1e293b;
+  --softTextColor: #a6a6a6;
+
+  --cardBg: #172033;
+  --borderColor: #334155;
+
+  --primary: #60a5fa;
+  --primaryHover: #93c5fd;
+
+  --success: #4ade80;
+  --danger: #f87171;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+
+/* =========================================
+   3. LIGHT THEME
+========================================= */
+
+.light {
+  color-scheme: light;
+
+  --bg: #ffffff;
+  --textColor: #0f172a;
+  --softBg: #f5f6f8;
+  --softTextColor: #626262;
+
+  --cardBg: #ffffff;
+  --borderColor: #e5e7eb;
+
+  --primary: #0f172a;
+  --primaryHover: #10b981;
+
+  --success: #10b981;
+  --danger: #dc2626;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================
+   4. GLOBAL RESET
+========================================= */
+
+*,
+*::before,
+*::after {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: clip;
+  scroll-padding-top: 80px;
+}
+
+body {
+  width: 100%;
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  background: var(--bg);
+  color: var(--textColor);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body,
+button,
+input,
+textarea,
+select {
+  font-family: var(--font-sans);
+}
+
+button,
+input,
+textarea,
+select {
+  font-size: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+img,
+video,
+svg {
+  max-width: 100%;
+}
+
+img,
+video {
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  padding-left: 1.5rem;
+}
+
+::selection {
+  background: var(--primary);
+  color: white;
+}
+
+
+/* =========================================
+   5. ACCESSIBILITY
+========================================= */
+
+:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+/* =========================================
+   6. SMOOTH THEME TRANSITIONS
+========================================= */
+
+/* Only transition elements that use theme colors.
+   Avoid applying transitions to every DOM element. */
+
+body,
+.container,
+.wrapper,
+header,
+nav,
+main,
+footer,
+section,
+article,
+aside,
+.card,
+.post,
+.menu,
+.dropdown,
+input,
+textarea,
+select,
+button,
+.ql-toolbar,
+.ql-container,
+.article-content blockquote,
+.article-content pre {
+  transition:
+    background-color var(--transition) var(--theme-easing),
+    color var(--transition) var(--theme-easing),
+    border-color var(--transition) var(--theme-easing),
+    box-shadow var(--transition) var(--theme-easing);
+}
+
+/* Main container */
+
+.container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--bg);
+  color: var(--textColor);
+}
+
+@media (max-width: 768px) {
+  .adsEnabled {
+    padding-bottom: 66px;
+  }
+}
+
+.in-article-ad-slot {
+  margin: 1.25em 0;
+}
+
+/* Cards */
+
+.card,
+.post {
+  background-color: var(--cardBg);
+  color: var(--textColor);
+  border: 1px solid var(--borderColor);
+}
+
+/* Inputs */
+
+input,
+textarea,
+select {
+  color: var(--textColor);
+  background-color: var(--cardBg);
+  border-color: var(--borderColor);
+}
+
+/* Links */
+
+a {
+  transition: color var(--transition) var(--theme-easing);
+}
+
+/* Prevent image flashing */
+
+img,
+video {
+  transition: none;
+}
+
+
+/* =========================================
+   7. ANIMATED THEME TOGGLE
+========================================= */
+
+.theme-toggle {
+  width: 44px;
+  height: 44px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid var(--borderColor);
+  border-radius: 50%;
+
+  background: var(--softBg);
+  color: var(--textColor);
+
+  cursor: pointer;
+
+  transition:
+    background-color var(--transition) var(--theme-easing),
+    color var(--transition) var(--theme-easing),
+    border-color var(--transition) var(--theme-easing),
+    transform 500ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow var(--transition) var(--theme-easing);
+}
+
+.theme-toggle:hover {
+  transform: rotate(25deg) scale(1.08);
+  box-shadow: var(--shadow-md);
+}
+
+.theme-toggle:active {
+  transform: scale(0.88);
+}
+
+.theme-toggle svg {
+  transition:
+    transform 500ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 300ms ease;
+}
+
+.dark .theme-toggle svg {
+  transform: rotate(180deg);
+}
+
+
+/* =========================================
+   8. OPTIONAL CINEMATIC THEME REVEAL
+   Requires View Transitions API JavaScript.
+========================================= */
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 500ms;
+  animation-timing-function: var(--theme-easing);
+}
+
+::view-transition-old(root) {
+  animation-name: theme-fade-out;
+}
+
+::view-transition-new(root) {
+  animation-name: theme-fade-in;
+}
+
+@keyframes theme-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes theme-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
+/* =========================================
+   9. MAIN CONTAINER
+========================================= */
+
+.container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--bg);
+  color: var(--textColor);
+}
+
+
+/* =========================================
+   10. RESPONSIVE WRAPPER
+========================================= */
+
+.wrapper {
+  width: calc(100% - 32px);
+  max-width: var(--content-width);
+  min-height: 100vh;
+  margin-inline: auto;
+  padding-inline: clamp(16px, 4vw, 48px);
+  display: flex;
+  flex-direction: column;
+}
+
+.mainContent {
+  flex: 1 0 auto;
+}
+
+
+/* =========================================
+   11. TYPOGRAPHY
+========================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.25;
+  font-weight: 700;
+  overflow-wrap: break-word;
+}
+
+h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+h2 {
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+h3 {
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+}
+
+p {
+  line-height: 1.75;
+}
+
+small {
+  font-size: 0.875rem;
+}
+
+
+/* =========================================
+   12. COMMON UI ELEMENTS
+========================================= */
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--borderColor);
+  margin-block: 20px;
+}
+
+input,
+textarea,
+select {
+  color: var(--textColor);
+  background: var(--cardBg);
+  border: 1px solid var(--borderColor);
+  border-radius: var(--radius-sm);
+}
+
+input,
+select {
+  min-height: 42px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+a:hover {
+  color: var(--primary);
+}
+
+
+/* =========================================
+   13. ARTICLE CONTENT
+========================================= */
+
+.article-content {
+  width: 100%;
+  max-width: var(--reading-width);
+  margin-inline: auto;
+  font-size: clamp(16px, 1.3vw, 19px);
+  line-height: 1.85;
+  overflow-wrap: anywhere;
+}
+
+.article-content p {
+  margin-bottom: 1.4rem;
+}
+
+.article-content h1,
+.article-content h2,
+.article-content h3 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.article-content img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem auto;
+  border-radius: var(--radius-md);
+}
+
+.article-content blockquote {
+  padding: 16px 20px;
+  margin: 1.5rem 0;
+  border-left: 4px solid var(--primary);
+  background: var(--softBg);
+  border-radius: var(--radius-sm);
+}
+
+.article-content a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.article-content ul,
+.article-content ol {
+  margin-bottom: 1.5rem;
+  padding-left: 2rem;
+}
+
+.article-content pre {
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 16px;
+  background: var(--softBg);
+  border-radius: var(--radius-md);
+}
+
+.article-content table {
+  width: 100%;
+  border-collapse: collapse;
+  display: block;
+  overflow-x: auto;
+}
+
+.article-content th,
+.article-content td {
+  padding: 10px;
+  border: 1px solid var(--borderColor);
+}
+
+
+/* =========================================
+   14. QUILL EDITOR
+========================================= */
+
+.ql-container {
+  font-size: 18px !important;
+  font-family: var(--font-sans) !important;
+  border-color: var(--borderColor) !important;
+  color: var(--textColor) !important;
+}
+
+.ql-editor {
+  min-height: 300px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.ql-editor.ql-blank::before {
+  color: var(--softTextColor) !important;
+  font-style: normal !important;
+}
+
+.ql-toolbar {
+  border-color: var(--borderColor) !important;
+}
+
+.ql-editor img {
+  max-width: 100%;
+  height: auto;
+}
+
+.ql-editor pre.ql-syntax {
+  background: #1e293b;
+  color: #e2e8f0;
+  overflow-x: auto;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+}
+
+
+/* =========================================
+   15. RESPONSIVE DESIGN
+========================================= */
+
+@media (max-width: 768px) {
+  .wrapper {
+    width: 100%;
+    padding-inline: 24px;
+  }
+
+  .article-content {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 480px) {
+  .wrapper {
+    padding-inline: 16px;
+  }
+
+  body {
+    font-size: 15px;
+  }
+
+  .article-content {
+    font-size: 16px;
+    line-height: 1.8;
+  }
+
+  .ql-container {
+    font-size: 16px !important;
+  }
+
+  .ql-editor {
+    min-height: 240px;
+  }
+}

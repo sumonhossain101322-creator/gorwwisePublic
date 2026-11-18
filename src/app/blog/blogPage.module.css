@@ -1,0 +1,29 @@
+.container {
+  min-width: 0;
+}
+
+.title {
+  margin: 20px 0 32px;
+  padding: clamp(16px, 3vw, 28px);
+  border-radius: 12px;
+  background: var(--softBg);
+  color: var(--textColor);
+  text-align: left;
+  text-transform: capitalize;
+  font-size: clamp(28px, 5vw, 54px);
+  overflow-wrap: anywhere;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(260px, 0.9fr);
+  align-items: start;
+  gap: clamp(28px, 4vw, 56px);
+}
+
+@media (max-width: 960px) {
+  .content {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+}

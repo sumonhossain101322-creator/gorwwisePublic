@@ -1,0 +1,120 @@
+.adSlot {
+  --ad-width: 728px;
+  --ad-height: 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--ad-width);
+  min-height: calc(var(--ad-height) + 28px);
+  margin-inline: auto;
+  margin-block: 16px;
+  padding: 8px 12px 12px;
+  border: 1px dashed var(--borderColor, #e2e8f0);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--cardBg, #f8fafc), var(--textColor, #111) 4%);
+  contain: layout;
+  overflow: hidden;
+}
+
+.adBody {
+  width: min(100%, var(--ad-width));
+  height: var(--ad-height);
+  min-height: var(--ad-height);
+  aspect-ratio: var(--ad-width) / var(--ad-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: rgba(148, 163, 184, 0.12);
+}
+
+.adLabel {
+  align-self: flex-start;
+  margin-bottom: 6px;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--softTextColor, #64748b);
+}
+
+.placeholder {
+  margin: 0;
+  font-size: 13px;
+  color: var(--softTextColor, #64748b);
+}
+
+.sizeLeaderboard {
+  --ad-width: 728px;
+  --ad-height: 90px;
+}
+
+.sizeRectangle {
+  --ad-width: 300px;
+  --ad-height: 250px;
+}
+
+.sizeSkyscraper {
+  --ad-width: 300px;
+  --ad-height: 600px;
+}
+
+.sizeInArticle {
+  --ad-width: 336px;
+  --ad-height: 280px;
+  max-width: 100%;
+}
+
+.sizeMobileBanner {
+  display: none;
+}
+
+.sticky {
+  position: sticky;
+  top: 16px;
+}
+
+.inFlow {
+  margin-block: 8px 20px;
+  max-width: 100%;
+}
+
+/* Mobile anchor: reserved 50px, fixed to the viewport, hidden on desktop. */
+@media (max-width: 768px) {
+  .sizeMobileBanner {
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 40;
+    width: 100%;
+    max-width: none;
+    min-height: 58px;
+    margin: 0;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+    background: var(--bg, #fff);
+  }
+
+  .sizeMobileBanner .adBody {
+    width: min(100%, 320px);
+    height: 50px;
+    min-height: 50px;
+  }
+
+  .sizeLeaderboard {
+    --ad-height: 50px;
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 769px) {
+  .sizeMobileBanner {
+    display: none;
+  }
+}

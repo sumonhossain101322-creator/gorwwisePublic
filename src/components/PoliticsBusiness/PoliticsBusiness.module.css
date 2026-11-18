@@ -1,0 +1,387 @@
+/* ======================
+   CONTAINER + TOKENS
+   ====================== */
+.container {
+  /* 4px spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: clamp(var(--space-6), 3vw, calc(var(--space-8) * 1.25)); /* up to 40px */
+  margin-block-start: calc(var(--space-8) * 1.5); /* 48px */
+  padding-block-start: var(--space-3);
+}
+
+/* ======================
+   SECTION HEADER
+   ====================== */
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-block: 0 var(--space-6);
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  background: #e11d48;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow:
+    0 0 0 3px rgba(225, 29, 72, 0.16),
+    0 0 10px 2px rgba(225, 29, 72, 0.4);
+}
+
+/* now an <h2>: reset UA heading styles, keep the existing look */
+.sectionLabel {
+  margin: 0;
+  font-size: clamp(0.75rem, 1vw, 0.8125rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--textColor);
+}
+
+.sectionLine {
+  flex: 1;
+  height: 1px;
+  background: var(--borderColor);
+}
+
+/* ======================
+   SHARED: single stretched link, focus, hover
+   ====================== */
+.cardLink {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.cardLink::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.cardLink:focus-visible,
+.container a:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.politicsMain,
+.politicsItem,
+.businessMain,
+.businessItem {
+  position: relative;
+  transform: translateY(var(--card-lift, 0px));
+  transition: transform 0.2s ease;
+}
+
+/* Unified hover / keyboard-focus state via custom properties */
+.politicsMain:hover,
+.politicsMain:focus-within,
+.politicsItem:hover,
+.politicsItem:focus-within,
+.businessMain:hover,
+.businessMain:focus-within,
+.businessItem:hover,
+.businessItem:focus-within {
+  --title-color: var(--primary);
+  --img-scale: 1.02;
+  --card-lift: -1px;
+}
+
+.mainImg,
+.thumbImg {
+  object-fit: cover;
+  transform: scale(var(--img-scale, 1));
+  transition: transform 0.3s ease;
+}
+
+/* ======================
+   AD SLOTS (reserved heights => zero CLS; no transitions or transforms)
+   ====================== */
+.adSlot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  box-sizing: border-box;
+  margin-block: var(--space-4);
+  padding: var(--space-4);
+  border: 1px dashed var(--borderColor);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--cardBg), var(--textColor) 3%);
+  contain: layout;
+}
+
+.adInline,
+.adNative {
+  min-height: 90px;
+}
+
+.adSidebar {
+  min-height: 250px;
+}
+
+.adLabel {
+  font-size: 0.625rem; /* 10px */
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--softTextColor);
+}
+
+.adBody {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  font-size: clamp(0.75rem, 1vw, 0.8125rem);
+  color: var(--softTextColor);
+}
+
+/* Device visibility pair (declared after .adSlot, more specific than its display) */
+.adSlot.mobileOnly {
+  display: none;
+}
+
+/* ======================
+   POLITICS (container for stacking queries)
+   ====================== */
+.politics {
+  container-type: inline-size;
+}
+
+/* Same bottom margin as .businessMain so both columns start their lists on one rhythm */
+.politicsMain {
+  margin-block: 0 var(--space-3);
+}
+
+.politicsMainImg {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 11;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-block-end: var(--space-4);
+}
+
+.politicsTitle {
+  font-size: clamp(1.25rem, 2.2vw, 1.65rem);
+  font-weight: 700;
+  line-height: 1.25;
+  margin-block: 0 var(--space-2);
+  color: var(--title-color, var(--textColor));
+  transition: color 0.2s ease;
+}
+
+.politicsDesc {
+  max-width: 60ch;
+  font-size: clamp(0.875rem, 1.2vw, 0.9375rem);
+  line-height: 1.6;
+  margin-block: 0;
+  color: var(--softTextColor);
+}
+
+/* Lists: thin divider above, then space before the first item */
+.politicsList,
+.businessList {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--borderColor);
+  padding-block-start: var(--space-5);
+}
+
+.politicsItem {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+  padding-block: var(--space-5);
+  padding-inline: 0;
+  border-bottom: 1px dashed var(--borderColor);
+}
+
+.politicsItem:first-child,
+.businessItem:first-child {
+  padding-block-start: 0;
+}
+
+.politicsItem:last-child {
+  border-bottom: none;
+  padding-block-end: 0;
+}
+
+.politicsItemImg {
+  position: relative;
+  width: 90px;
+  height: 68px;
+  flex-shrink: 0;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.politicsItemTitle {
+  font-size: clamp(0.95rem, 1.4vw, 1rem);
+  font-weight: 600;
+  line-height: 1.4;
+  margin-block: 0;
+  color: var(--title-color, var(--textColor));
+  transition: color 0.2s ease;
+}
+
+/* ======================
+   BUSINESS (container for tightening query)
+   ====================== */
+.business {
+  container-type: inline-size;
+}
+
+.businessMain {
+  margin-block: 0 var(--space-3);
+}
+
+.businessMainImg {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 7px;
+  overflow: hidden;
+  margin-block-end: var(--space-3);
+}
+
+.businessMainTitle {
+  font-size: clamp(1.1rem, 1.7vw, 1.25rem);
+  font-weight: 700;
+  line-height: 1.35;
+  margin-block: 0;
+  color: var(--title-color, var(--textColor));
+  transition: color 0.2s ease;
+}
+
+.businessItem {
+  padding-block: var(--space-5);
+  padding-inline: 0;
+  border-bottom: 1px dashed var(--borderColor);
+}
+
+.businessItem:last-child {
+  border-bottom: none;
+}
+
+.businessItemTitle {
+  font-size: clamp(0.925rem, 1.35vw, 1rem);
+  font-weight: 600;
+  line-height: 1.4;
+  margin-block: 0;
+  color: var(--title-color, var(--textColor));
+  transition: color 0.2s ease;
+}
+
+/* ======================
+   CONTAINER QUERIES
+   ====================== */
+
+/* Politics column: thumbnail list stacks when narrow */
+@container (max-width: 340px) {
+  .politicsItem {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .politicsItemImg {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+  }
+}
+
+@container (min-width: 341px) {
+  .politicsItem {
+    flex-direction: row;
+  }
+}
+
+/* Business column: tighten the text list when narrow */
+@container (max-width: 320px) {
+  .businessItem {
+    padding-block: var(--space-4);
+  }
+
+  .businessItemTitle {
+    font-size: clamp(0.875rem, 1.2vw, 0.9375rem);
+  }
+}
+
+/* ======================
+   RESPONSIVE LAYOUT
+   (grid lives on .container, which can't query itself, so the
+   column switch uses viewport media queries)
+   ====================== */
+
+/* Two-column only: accent bar anchors the image-light business lead */
+@media (min-width: 961px) {
+  .businessMain {
+    padding-inline-start: var(--space-4);
+  }
+
+  .businessMain::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    width: 4px;
+    border-radius: 2px;
+    background: var(--primary);
+  }
+}
+
+/* Single column */
+@media (max-width: 960px) {
+  .container {
+    grid-template-columns: minmax(0, 1fr);
+    gap: calc(var(--space-8) * 1.5);
+    padding-block-end: var(--space-8);
+  }
+
+  .adSlot.desktopOnly {
+    display: none;
+  }
+
+  .adSlot.mobileOnly {
+    display: flex;
+  }
+}
+
+@media (max-width: 600px) {
+  .politicsTitle {
+    font-size: clamp(1.15rem, 4vw, 1.35rem);
+  }
+
+  .businessMainTitle {
+    font-size: clamp(1.05rem, 3.8vw, 1.2rem);
+  }
+}
+
+/* ======================
+   REDUCED MOTION
+   (.container * also covers .adSlot, which has no transitions anyway)
+   ====================== */
+@media (prefers-reduced-motion: reduce) {
+  .container,
+  .container * {
+    transition: none !important;
+    transform: none !important;
+  }
+}

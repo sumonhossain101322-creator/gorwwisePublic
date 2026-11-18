@@ -1,0 +1,2 @@
+.track { position:fixed; inset:0 0 auto; z-index:1000; height:3px; background:transparent; pointer-events:none; }
+.track span { display:block; height:100%; background:var(--accent); transition:width .12s linear; }

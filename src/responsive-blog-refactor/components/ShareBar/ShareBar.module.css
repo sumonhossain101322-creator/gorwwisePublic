@@ -1,0 +1,5 @@
+.share { display:flex; flex-wrap:wrap; align-items:center; gap:.4rem; min-width:0; }
+.share a,.share button { display:inline-flex; align-items:center; justify-content:center; min-height:2.75rem; padding:.45rem .7rem; border:1px solid var(--border); border-radius:.45rem; background:var(--surface); color:var(--fg); font:inherit; font-size:.82rem; text-decoration:none; cursor:pointer; }
+.share a:hover,.share button:hover { border-color:var(--accent); color:var(--accent); }
+.toast { min-width:5rem; color:var(--muted); font-size:.8rem; }
+.share :focus-visible { outline:3px solid var(--focus); outline-offset:2px; }
