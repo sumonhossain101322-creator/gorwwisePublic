@@ -1,6 +1,6 @@
 
 import { Fragment } from "react";
-import styles from "./politicsBusiness.module.css";
+import styles from "./PoliticsBusiness.module.css";
 import Link from "next/link";
 import { Cover, SkeletonText, padSlots } from "@/components/skeleton/Skeleton";
 
