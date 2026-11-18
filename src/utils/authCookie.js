@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import { encode } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 
@@ -13,6 +14,13 @@ export async function readBody(req) {
 
 export function jsonError(message, status, extra) {
   return NextResponse.json({ message, ...extra }, { status });
+}
+
+export function requestOrigin(req) {
+  const host = req?.headers?.get?.("x-forwarded-host") || req?.headers?.get?.("host") || "";
+  if (!host || host.startsWith("localhost") || host.startsWith("127.0.0.1")) return "";
+  const proto = req.headers.get("x-forwarded-proto") || "https";
+  return `${proto}://${host}`;
 }
 
 export function rejectCrossOrigin(req) {
@@ -45,7 +53,13 @@ export async function withSessionCookie(body, user, status = 200) {
   const secret = process.env.NEXTAUTH_SECRET;
   if (!secret) throw new Error("NEXTAUTH_SECRET is not set.");
 
-  const secure = process.env.NEXTAUTH_URL?.startsWith("https://") ?? false;
+  let forwardedProto = "";
+  try {
+    forwardedProto = headers().get("x-forwarded-proto") || "";
+  } catch {
+    forwardedProto = "";
+  }
+  const secure = forwardedProto === "https" || (process.env.NEXTAUTH_URL?.startsWith("https://") ?? false);
   const cookieName = secure ? "__Secure-next-auth.session-token" : "next-auth.session-token";
   const token = {
     sub: user.id,
